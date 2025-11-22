@@ -51,10 +51,19 @@
                         <span class="tooltip" data-tooltip="Los contratos temporales tienen mayor cotización por desempleo">ℹ️</span>
                     </label>
                 </div>
+
+                <div class="action-buttons">
+                    <button id="btnMensual" class="view-toggle active">📅 Vista Mensual</button>
+                    <button id="btnAnual" class="view-toggle">📆 Vista Anual</button>
+                    <button id="btnExportPDF" class="export-btn">📄 Exportar a PDF</button>
+                </div>
             </section>
 
             <!-- Resumen visual del flujo de dinero -->
             <section class="visual-summary">
+                <div class="period-indicator">
+                    <span id="periodText">Cálculo Mensual</span>
+                </div>
                 <div class="flow-card empresa-card">
                     <h3>🏢 Coste Total Empresa</h3>
                     <div class="amount-large" id="costeEmpresa">2.000,00 €</div>
@@ -303,6 +312,96 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Resumen Anual -->
+            <section class="card annual-section" id="anualSection" style="display: none;">
+                <h2>📅 Resumen Anual</h2>
+                <p class="section-intro">Proyección de todos los costes y salarios para el año completo según <span id="numPagas">14</span> pagas</p>
+
+                <div class="annual-summary-grid">
+                    <div class="annual-card highlight-empresa">
+                        <div class="annual-icon">🏢</div>
+                        <div class="annual-label">Coste Total Empresa Anual</div>
+                        <div class="annual-amount" id="costeEmpresaAnual">0,00 €</div>
+                    </div>
+                    <div class="annual-card highlight-bruto">
+                        <div class="annual-icon">📄</div>
+                        <div class="annual-label">Salario Bruto Anual</div>
+                        <div class="annual-amount" id="salarioBrutoAnual">0,00 €</div>
+                    </div>
+                    <div class="annual-card highlight-neto">
+                        <div class="annual-icon">💳</div>
+                        <div class="annual-label">Salario Neto Anual</div>
+                        <div class="annual-amount" id="salarioNetoAnual">0,00 €</div>
+                    </div>
+                </div>
+
+                <div class="annual-breakdown">
+                    <div class="annual-breakdown-column">
+                        <h3 class="annual-section-title">💸 Descuentos Anuales del Trabajador</h3>
+                        <div class="annual-item">
+                            <span class="annual-item-label">Seguridad Social (trabajador)</span>
+                            <span class="annual-item-value" id="ssTrabajadorAnual">0,00 €</span>
+                        </div>
+                        <div class="annual-item">
+                            <span class="annual-item-label">Retención IRPF</span>
+                            <span class="annual-item-value" id="irpfAnual">0,00 €</span>
+                        </div>
+                        <div class="annual-total">
+                            <span class="annual-total-label">Total Descuentos Anuales</span>
+                            <span class="annual-total-value" id="totalDescuentosAnual">0,00 €</span>
+                        </div>
+                    </div>
+
+                    <div class="annual-breakdown-column">
+                        <h3 class="annual-section-title">🏢 Costes Anuales de la Empresa</h3>
+                        <div class="annual-item">
+                            <span class="annual-item-label">Seguridad Social (empresa)</span>
+                            <span class="annual-item-value" id="ssEmpresaAnual">0,00 €</span>
+                        </div>
+                        <div class="annual-item">
+                            <span class="annual-item-label">Salarios pagados (bruto)</span>
+                            <span class="annual-item-value" id="salariosPagadosAnual">0,00 €</span>
+                        </div>
+                        <div class="annual-total">
+                            <span class="annual-total-label">Coste Total Anual</span>
+                            <span class="annual-total-value" id="costeTotalAnual">0,00 €</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="annual-insights">
+                    <h3>💡 Datos Anuales Destacados</h3>
+                    <div class="annual-insights-grid">
+                        <div class="annual-insight-card">
+                            <div class="insight-icon">💰</div>
+                            <div class="insight-content">
+                                <div class="insight-amount" id="totalSSAnual">0,00 €</div>
+                                <div class="insight-text">Total a Seguridad Social al año</div>
+                            </div>
+                        </div>
+                        <div class="annual-insight-card">
+                            <div class="insight-icon">📉</div>
+                            <div class="insight-content">
+                                <div class="insight-amount" id="diferenciaAnual">0,00 €</div>
+                                <div class="insight-text">Diferencia entre coste empresa y neto trabajador</div>
+                            </div>
+                        </div>
+                        <div class="annual-insight-card">
+                            <div class="insight-icon">📊</div>
+                            <div class="insight-content">
+                                <div class="insight-amount" id="salarioMedioMensual">0,00 €</div>
+                                <div class="insight-text">Salario neto mensual de media</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box annual-info">
+                    <p><strong>ℹ️ Sobre las Pagas Extraordinarias:</strong></p>
+                    <p id="pagasExtraInfo">Con 14 pagas, recibes dos pagas extras al año (normalmente en junio/julio y diciembre). Estas pagas también tienen retenciones de Seguridad Social e IRPF.</p>
+                </div>
+            </section>
         </main>
 
         <footer>
@@ -311,6 +410,8 @@
         </footer>
     </div>
 
+    <!-- Librería para exportar a PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
