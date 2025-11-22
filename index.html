@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Nómina Española - ¿Cuánto cuesta realmente un trabajador?</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 Calculadora de Nómina Española</h1>
+            <p class="subtitle">Entiende el coste real de un trabajador y dónde va tu dinero</p>
+        </header>
+
+        <main>
+            <!-- Sección de entrada de datos -->
+            <section class="input-section card">
+                <h2>📝 Datos del Trabajador</h2>
+                <div class="input-group">
+                    <label for="salarioBruto">
+                        Salario Bruto Mensual (€)
+                        <span class="tooltip" data-tooltip="El salario pactado en el contrato, antes de descuentos">ℹ️</span>
+                    </label>
+                    <input type="number" id="salarioBruto" value="2000" min="0" step="0.01">
+                </div>
+
+                <div class="input-group">
+                    <label for="irpf">
+                        Retención IRPF (%)
+                        <span class="tooltip" data-tooltip="Depende de tu situación personal: hijos, discapacidad, etc. Suele estar entre 2% y 25%">ℹ️</span>
+                    </label>
+                    <input type="number" id="irpf" value="15" min="0" max="47" step="0.01">
+                </div>
+
+                <div class="input-group">
+                    <label for="pagas">
+                        Pagas Anuales
+                        <span class="tooltip" data-tooltip="12 pagas (salario prorrateado) o 14 pagas (con pagas extra)">ℹ️</span>
+                    </label>
+                    <select id="pagas">
+                        <option value="12">12 pagas (prorrateadas)</option>
+                        <option value="14" selected>14 pagas (con extras)</option>
+                    </select>
+                </div>
+
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="contratoTemporal">
+                        Contrato Temporal
+                        <span class="tooltip" data-tooltip="Los contratos temporales tienen mayor cotización por desempleo">ℹ️</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- Resumen visual del flujo de dinero -->
+            <section class="visual-summary">
+                <div class="flow-card empresa-card">
+                    <h3>🏢 Coste Total Empresa</h3>
+                    <div class="amount-large" id="costeEmpresa">2.000,00 €</div>
+                    <p class="description">Lo que realmente paga la empresa por el trabajador</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <div class="arrow-down">↓</div>
+                    <div class="flow-explanation">
+                        <strong id="diferenciaCosteBruto">0,00 €</strong> se quedan en Seguridad Social (empresa)
+                    </div>
+                </div>
+
+                <div class="flow-card bruto-card">
+                    <h3>📄 Salario Bruto</h3>
+                    <div class="amount-large" id="salarioBrutoDisplay">2.000,00 €</div>
+                    <p class="description">Lo pactado en tu contrato</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <div class="arrow-down">↓</div>
+                    <div class="flow-explanation">
+                        <strong id="totalDescuentos">0,00 €</strong> en retenciones (IRPF + Seg. Social)
+                    </div>
+                </div>
+
+                <div class="flow-card neto-card">
+                    <h3>💳 Salario Neto</h3>
+                    <div class="amount-large" id="salarioNeto">2.000,00 €</div>
+                    <p class="description">Lo que recibes en tu cuenta bancaria</p>
+                </div>
+            </section>
+
+            <!-- Desglose detallado -->
+            <section class="card breakdown-section">
+                <h2>📊 Desglose Detallado de la Nómina</h2>
+
+                <div class="breakdown-container">
+                    <!-- Columna izquierda: Cotizaciones del trabajador -->
+                    <div class="breakdown-column">
+                        <h3 class="section-title trabajador-title">👤 Descuentos del Trabajador</h3>
+                        <p class="section-description">Estos importes se descuentan de tu salario bruto</p>
+
+                        <div class="breakdown-item">
+                            <div class="item-header">
+                                <span class="item-label">
+                                    Contingencias Comunes (4,70%)
+                                    <span class="tooltip" data-tooltip="Cotización para pensiones, incapacidad temporal, etc.">ℹ️</span>
+                                </span>
+                                <span class="item-value" id="ccTrabajador">0,00 €</span>
+                            </div>
+                        </div>
+
+                        <div class="breakdown-item">
+                            <div class="item-header">
+                                <span class="item-label">
+                                    Desempleo (<span id="desempleoTrabajadorPct">1,55</span>%)
+                                    <span class="tooltip" data-tooltip="Para financiar el paro. Mayor en contratos temporales (1,60%)">ℹ️</span>
+                                </span>
+                                <span class="item-value" id="desempleoTrabajador">0,00 €</span>
+                            </div>
+                        </div>
+
+                        <div class="breakdown-item">
+                            <div class="item-header">
+                                <span class="item-label">
+                                    Formación Profesional (0,10%)
+                                    <span class="tooltip" data-tooltip="Para programas de formación y reciclaje profesional">ℹ️</span>
+                                </span>
+                                <span class="item-value" id="fpTrabajador">0,00 €</span>
+                            </div>
+                        </div>
+
+                        <div class="breakdown-total">
+                            <span class="total-label">Total Seguridad Social Trabajador</span>
+                            <span class="total-value" id="totalSSTrabajador">0,00 €</span>
+                        </div>
+
+                        <div class="breakdown-item highlight">
+                            <div class="item-header">
+                                <span class="item-label">
+                                    Retención IRPF
+                                    <span class="tooltip" data-tooltip="Impuesto sobre la renta que se adelanta a Hacienda">ℹ️</span>
+                                </span>
+                                <span class="item-value" id="retencionIRPF">0,00 €</span>
+                            </div>
+                        </div>
+
+                        <div class="breakdown-grand-total trabajador-total">
+                            <span class="total-label">Total Descuentos</span>
+                            <span class="total-value" id="totalDescuentosTrabajador">0,00 €</span>
+                        </div>
+                    </div>
+
+                    <!-- Columna derecha: Cotizaciones de la empresa -->
+                    <div class="breakdown-column">
+                        <h3 class="section-title empresa-title">🏢 Costes Adicionales Empresa</h3>
+                        <p class="section-description">Lo que paga la empresa además de tu salario bruto</p>
+
+                        <div class="breakdown-item">
+                            <div class="item-header">
+                                <span class="item-label">
+                                    Contingencias Comunes (23,60%)
+                                    <span class="tooltip" data-tooltip="La empresa paga mucho más que el trabajador para pensiones y prestaciones">ℹ️</span>
+                                </span>
+                                <span class="item-value" id="ccEmpresa">0,00 €</span>
+                            </div>
+                        </div>
+
+                        <div class="breakdown-item">
+                            <div class="item-header">
+                                <span class="item-label">
+                                    Desempleo (<span id="desempleoEmpresaPct">5,50</span>%)
+                                    <span class="tooltip" data-tooltip="La empresa también cotiza por desempleo. Mayor en temporales (6,70%)">ℹ️</span>
+                                </span>
+                                <span class="item-value" id="desempleoEmpresa">0,00 €</span>
+                            </div>
+                        </div>
+
+                        <div class="breakdown-item">
+                            <div class="item-header">
+                                <span class="item-label">
+                                    FOGASA (0,20%)
+                                    <span class="tooltip" data-tooltip="Fondo de Garantía Salarial, para pagar salarios si la empresa quiebra">ℹ️</span>
+                                </span>
+                                <span class="item-value" id="fogasa">0,00 €</span>
+                            </div>
+                        </div>
+
+                        <div class="breakdown-item">
+                            <div class="item-header">
+                                <span class="item-label">
+                                    Formación Profesional (0,60%)
+                                    <span class="tooltip" data-tooltip="La empresa paga más en formación que el trabajador">ℹ️</span>
+                                </span>
+                                <span class="item-value" id="fpEmpresa">0,00 €</span>
+                            </div>
+                        </div>
+
+                        <div class="breakdown-total">
+                            <span class="total-label">Total Seguridad Social Empresa</span>
+                            <span class="total-value" id="totalSSEmpresa">0,00 €</span>
+                        </div>
+
+                        <div class="info-box">
+                            <p><strong>💡 ¿Sabías que...?</strong></p>
+                            <p>La empresa paga aproximadamente un 30% adicional sobre tu salario bruto en cotizaciones a la Seguridad Social.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección educativa: ¿Dónde va el dinero? -->
+            <section class="card educational-section">
+                <h2>🎓 ¿Dónde Se Queda el Dinero?</h2>
+
+                <div class="money-flow-chart">
+                    <div class="money-bar">
+                        <div class="bar-segment empresa-extra" id="barEmpresaExtra" style="width: 30%;">
+                            <span class="bar-label">Seg. Social Empresa</span>
+                        </div>
+                        <div class="bar-segment trabajador-ss" id="barTrabajadorSS" style="width: 6.35%;">
+                            <span class="bar-label">Seg. Social Trabajador</span>
+                        </div>
+                        <div class="bar-segment irpf-bar" id="barIRPF" style="width: 15%;">
+                            <span class="bar-label">IRPF</span>
+                        </div>
+                        <div class="bar-segment neto-bar" id="barNeto" style="width: 48.65%;">
+                            <span class="bar-label">Salario Neto (lo que recibes)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="money-flow-explanation">
+                    <div class="explanation-item">
+                        <div class="explanation-icon empresa-extra">🏢</div>
+                        <div class="explanation-text">
+                            <strong>Seguridad Social (Empresa): <span id="pctSSEmpresa">30%</span></strong>
+                            <p>La empresa paga esto ADEMÁS de tu salario bruto. Financia pensiones, sanidad, desempleo...</p>
+                        </div>
+                    </div>
+
+                    <div class="explanation-item">
+                        <div class="explanation-icon trabajador-ss">👤</div>
+                        <div class="explanation-text">
+                            <strong>Seguridad Social (Trabajador): <span id="pctSSTrabajador">6,35%</span></strong>
+                            <p>Se descuenta de tu salario bruto para el mismo sistema de protección social.</p>
+                        </div>
+                    </div>
+
+                    <div class="explanation-item">
+                        <div class="explanation-icon irpf-bar">🏛️</div>
+                        <div class="explanation-text">
+                            <strong>IRPF: <span id="pctIRPF">15%</span></strong>
+                            <p>Impuesto sobre la renta que se adelanta a Hacienda. Lo ajustarás en la declaración anual.</p>
+                        </div>
+                    </div>
+
+                    <div class="explanation-item">
+                        <div class="explanation-icon neto-bar">💳</div>
+                        <div class="explanation-text">
+                            <strong>Tu Salario Neto: <span id="pctNeto">48,65%</span></strong>
+                            <p>Lo que finalmente llega a tu cuenta bancaria cada mes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="key-insights">
+                    <h3>📌 Datos Clave</h3>
+                    <div class="insights-grid">
+                        <div class="insight-card">
+                            <div class="insight-number" id="ratioCosteNeto">1,00</div>
+                            <div class="insight-label">Por cada 1€ que recibes, la empresa paga...</div>
+                        </div>
+                        <div class="insight-card">
+                            <div class="insight-number" id="pctRecibes">100%</div>
+                            <div class="insight-label">Del coste total empresa, recibes...</div>
+                        </div>
+                        <div class="insight-card">
+                            <div class="insight-number" id="dineroSS">0€</div>
+                            <div class="insight-label">Total a Seguridad Social (empresa + trabajador)</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Información adicional -->
+            <section class="card info-section">
+                <h2>ℹ️ Información Importante</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>🔄 Pagas Extraordinarias</h4>
+                        <p>Si tienes 14 pagas, recibes dos pagas extra al año (verano y Navidad). Si tienes 12 pagas, estas están prorrateadas en el salario mensual.</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>📊 IRPF Variable</h4>
+                        <p>El porcentaje de IRPF depende de tu situación: si tienes hijos, discapacidad, si eres el único pagador en la familia, etc. Puedes consultarlo en tu nómina.</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>🏥 ¿Para Qué es la Seguridad Social?</h4>
+                        <p>Financia: pensiones de jubilación, sanidad pública, prestación por desempleo, incapacidad temporal (baja médica), maternidad/paternidad, y más.</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>⚖️ Bases de Cotización</h4>
+                        <p>Hay bases mínimas y máximas de cotización. Esta calculadora usa los porcentajes estándar de un trabajador del Régimen General.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>⚠️ Esta calculadora tiene carácter orientativo y educativo. Los cálculos pueden variar según convenio, categoría profesional, bases de cotización, y otros factores. Consulta tu nómina oficial para datos exactos.</p>
+            <p>Datos actualizados para 2024-2025 | Régimen General de la Seguridad Social</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
